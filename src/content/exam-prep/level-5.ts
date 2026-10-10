@@ -1,0 +1,446 @@
+import { tag } from "./tag";
+
+export const level5 = tag("l5", [
+  // Describe cloud concepts — 13 questions (~29%)
+  {
+    lesson: "cloud-computing",
+    kind: "yesno",
+    prompt: "For each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+    options: [
+      "Cloud computing lets you provision resources in minutes instead of weeks.",
+      "With the consumption-based model, you must estimate and buy peak capacity up front.",
+      "Operational expenditure can be deducted in the same year it is spent.",
+    ],
+    answer: 0,
+    answers: [0, 2],
+    explanation:
+      "Fast provisioning is a core cloud trait. Consumption-based means no peak buying up front. OpEx is typically deducted in the year spent, while CapEx depreciates over time.",
+  },
+  {
+    lesson: "cloud-computing",
+    kind: "complete",
+    prompt: "A company that pays a cloud provider monthly for the compute it used is incurring ____.",
+    options: ["operational expenditure", "capital expenditure", "depreciation", "a fixed asset"],
+    answer: 0,
+    explanation: "Pay-as-you-use services are OpEx.",
+  },
+  {
+    lesson: "cloud-computing",
+    prompt:
+      "A developer wants code to run whenever a new order is placed, scale automatically, and cost nothing when idle. Which approach should you recommend?",
+    options: ["Serverless computing", "A dedicated host", "A reserved virtual machine", "A private cloud"],
+    answer: 0,
+    explanation: "Event-driven, auto-scaling, no idle cost = serverless.",
+  },
+  {
+    lesson: "shared-responsibility",
+    kind: "yesno",
+    prompt: "For each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+    options: [
+      "For IaaS, the customer is responsible for installing application updates.",
+      "For SaaS, Microsoft is responsible for managing user devices.",
+      "For PaaS, Microsoft is responsible for the operating system.",
+    ],
+    answer: 0,
+    answers: [0, 2],
+    explanation: "IaaS app updates are the customer's. Devices are always the customer's. PaaS OS is Microsoft's.",
+  },
+  {
+    lesson: "shared-responsibility",
+    prompt:
+      "Your company moves file storage from an on-premises file server to Microsoft OneDrive (SaaS). Which responsibility does your company keep?",
+    options: [
+      "Controlling who can access the files",
+      "Patching the storage servers",
+      "Physical security of the datacenter",
+      "Maintaining the OneDrive application code",
+    ],
+    answer: 0,
+    explanation: "Access to your data is always your responsibility.",
+  },
+  {
+    lesson: "shared-responsibility",
+    prompt: "Which cloud service type places the MOST security responsibility on the customer?",
+    options: ["IaaS", "PaaS", "SaaS", "They are equal"],
+    answer: 0,
+    explanation: "IaaS leaves the most layers to the customer.",
+  },
+  {
+    lesson: "cloud-models",
+    prompt:
+      "A hospital keeps patient records on servers in its own building, and uses Azure to run a patient-portal website that reads some of that data. Which cloud model is this?",
+    options: ["Hybrid cloud", "Public cloud", "Private cloud", "Multi-cloud"],
+    answer: 0,
+    explanation: "On-premises plus public cloud working together = hybrid.",
+  },
+  {
+    lesson: "cloud-models",
+    kind: "complete",
+    prompt: "A cloud model in which computing resources are used exclusively by one business or organization is a ____.",
+    options: ["private cloud", "public cloud", "hybrid cloud", "community region"],
+    answer: 0,
+    explanation: "Exclusive use by one organization = private cloud.",
+  },
+  {
+    lesson: "cloud-benefits",
+    kind: "multi",
+    prompt: "Which TWO are benefits of moving workloads from an on-premises datacenter to Azure? Each correct answer presents a complete solution.",
+    options: [
+      "Resources can be scaled in and out with demand",
+      "You no longer need to buy and replace server hardware",
+      "You are no longer responsible for user identities",
+      "Every service has a 100% SLA",
+    ],
+    answer: 0,
+    answers: [0, 1],
+    explanation: "Elastic scale and no hardware purchases are real benefits. Identities stay yours; no SLA is 100%.",
+  },
+  {
+    lesson: "cloud-benefits",
+    prompt:
+      "A company wants a reporting app to respond within two seconds even at month-end, using load tests and autoscaling. Which benefit is this?",
+    options: ["Performance predictability", "Cost predictability", "Governance", "Sustainability"],
+    answer: 0,
+    explanation: "Consistent performance under load = performance predictability.",
+  },
+  {
+    lesson: "cloud-benefits",
+    prompt: "Which benefit of the cloud is described as \"the ability to recover from failures and continue to function\"?",
+    options: ["Reliability", "Elasticity", "Agility", "Vertical scaling"],
+    answer: 0,
+    explanation: "That is Microsoft's definition of reliability.",
+  },
+  {
+    lesson: "cloud-service-types",
+    kind: "yesno",
+    prompt: "For each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+    options: [
+      "Azure Virtual Machines is an example of PaaS.",
+      "Azure App Service is an example of PaaS.",
+      "Microsoft Dynamics 365 is an example of SaaS.",
+    ],
+    answer: 0,
+    answers: [1, 2],
+    explanation: "VMs are IaaS. App Service is PaaS. Dynamics 365 is SaaS.",
+  },
+  {
+    lesson: "cloud-service-types",
+    prompt:
+      "A company wants to build a new web app quickly and does not want to manage servers, but must deploy its own custom code. Which service type should it use?",
+    options: ["PaaS", "IaaS", "SaaS", "On-premises"],
+    answer: 0,
+    explanation: "Custom code without servers to manage = PaaS.",
+  },
+
+  // Describe Azure architecture and services — 17 questions (~38%)
+  {
+    lesson: "regions-and-zones",
+    kind: "yesno",
+    prompt: "For each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+    options: [
+      "An availability zone is a separate Azure region.",
+      "Deploying VMs across availability zones can protect against a datacenter failure.",
+      "Region pairs help with disaster recovery.",
+    ],
+    answer: 0,
+    answers: [1, 2],
+    explanation: "Zones are inside a region. Spreading across zones survives a datacenter failure. Pairs support DR.",
+  },
+  {
+    lesson: "regions-and-zones",
+    prompt:
+      "A government agency in the United States requires an isolated instance of Azure with screened personnel. What should it use?",
+    options: ["Azure Government", "A region pair", "An availability set", "A management group"],
+    answer: 0,
+    explanation: "Azure Government is the US sovereign cloud.",
+  },
+  {
+    lesson: "resource-hierarchy",
+    kind: "complete",
+    prompt: "You can use ____ to apply governance conditions to multiple Azure subscriptions at once.",
+    options: ["management groups", "resource groups", "availability zones", "tags"],
+    answer: 0,
+    explanation: "Management groups sit above subscriptions and pass down policy and RBAC.",
+  },
+  {
+    lesson: "resource-hierarchy",
+    kind: "yesno",
+    prompt: "For each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+    options: [
+      "A resource group can contain resources from multiple Azure regions.",
+      "Deleting a resource group deletes all the resources it contains.",
+      "A resource group can belong to two subscriptions.",
+    ],
+    answer: 0,
+    answers: [0, 1],
+    explanation: "Resource groups can span regions and share a lifecycle, but belong to one subscription.",
+  },
+  {
+    lesson: "compute",
+    prompt:
+      "Your company must deploy 50 identical VMs that scale automatically based on CPU usage. Which Azure service should you use?",
+    options: ["Virtual Machine Scale Sets", "Availability sets", "Azure Virtual Desktop", "Azure Container Instances"],
+    answer: 0,
+    explanation: "Scale sets manage and autoscale identical VMs.",
+  },
+  {
+    lesson: "compute",
+    kind: "multi",
+    prompt: "Which TWO Azure services can host a containerized application? Each correct answer presents a complete solution.",
+    options: [
+      "Azure Kubernetes Service",
+      "Azure Container Instances",
+      "Azure DNS",
+      "Azure Data Box",
+    ],
+    answer: 0,
+    answers: [0, 1],
+    explanation: "AKS and ACI both run containers. DNS and Data Box do not host apps.",
+  },
+  {
+    lesson: "compute",
+    prompt:
+      "A company wants to add speech-to-text and translation to its app using prebuilt models, without hiring data scientists. Which service family should it use?",
+    options: ["Azure AI services", "Azure Machine Learning", "Azure IoT Edge", "Azure Arc"],
+    answer: 0,
+    explanation: "Prebuilt AI models behind APIs = Azure AI services.",
+  },
+  {
+    lesson: "networking",
+    kind: "complete",
+    prompt: "To connect two Azure virtual networks so resources can communicate privately over the Microsoft backbone, use ____.",
+    options: ["VNet peering", "a point-to-site VPN", "Azure DNS", "a public endpoint"],
+    answer: 0,
+    explanation: "VNet peering links VNets privately.",
+  },
+  {
+    lesson: "networking",
+    prompt:
+      "Your company needs a connection between its datacenter and Azure that offers higher reliability and lower latency than the internet, with traffic never crossing the public internet. What should you use?",
+    options: ["Azure ExpressRoute", "A site-to-site VPN", "VNet peering", "Azure Bastion"],
+    answer: 0,
+    explanation: "ExpressRoute = private, predictable connectivity.",
+  },
+  {
+    lesson: "networking",
+    kind: "yesno",
+    prompt: "For each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+    options: [
+      "A network security group can be associated with a subnet.",
+      "Azure DNS can host your public domain's DNS records.",
+      "A private endpoint exposes a service on a public IP address.",
+    ],
+    answer: 0,
+    answers: [0, 1],
+    explanation: "NSGs attach to subnets/NICs. Azure DNS hosts zones. A private endpoint uses a private IP.",
+  },
+  {
+    lesson: "storage",
+    prompt:
+      "You need to store backups that are accessed once a year. The data must be retained for 10 years at the lowest possible cost, and retrieval can take several hours. Which access tier should you use?",
+    options: ["Archive", "Cold", "Cool", "Hot"],
+    answer: 0,
+    explanation: "Lowest cost with hours of retrieval acceptable = Archive.",
+  },
+  {
+    lesson: "storage",
+    kind: "multi",
+    prompt: "Which TWO storage redundancy options protect data if an entire availability zone fails? Each correct answer presents a complete solution.",
+    options: ["ZRS", "GZRS", "LRS", "A ReadOnly lock on the storage account"],
+    answer: 0,
+    answers: [0, 1],
+    explanation: "ZRS and GZRS replicate across zones in the primary region. LRS stays in one datacenter.",
+  },
+  {
+    lesson: "storage",
+    prompt:
+      "A company has 40 TB of data and a slow internet link. It wants to move the data to Azure as quickly as possible. What should it use?",
+    options: ["Azure Data Box", "AzCopy", "Azure File Sync", "Azure Storage Explorer"],
+    answer: 0,
+    explanation: "Offline transfer on a shipped device beats a slow network.",
+  },
+  {
+    lesson: "identity",
+    kind: "yesno",
+    prompt: "For each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+    options: [
+      "Conditional Access can require MFA based on the user's location.",
+      "Single sign-on requires users to enter a password for each app.",
+      "Microsoft Entra ID can provide identity for SaaS applications.",
+    ],
+    answer: 0,
+    answers: [0, 2],
+    explanation: "Conditional Access uses location. SSO avoids repeated passwords. Entra ID integrates with thousands of SaaS apps.",
+  },
+  {
+    lesson: "identity",
+    prompt:
+      "You need to let users from a partner organization access your company's app using their existing work accounts. What should you use?",
+    options: ["Microsoft Entra B2B collaboration", "Azure RBAC alone", "Microsoft Entra Domain Services", "A ReadOnly lock"],
+    answer: 0,
+    explanation: "B2B collaboration invites guests who sign in with their own identity.",
+  },
+  {
+    lesson: "security",
+    kind: "complete",
+    prompt: "The Zero Trust principle of ____ means limiting user access with just-in-time and just-enough access.",
+    options: ["least privilege", "assume breach", "verify explicitly", "defense-in-depth"],
+    answer: 0,
+    explanation: "Just-in-time / just-enough = least privilege.",
+  },
+  {
+    lesson: "security",
+    prompt:
+      "You need a service that provides security recommendations, a Secure Score, and threat protection for Azure and on-premises workloads. What should you use?",
+    options: ["Microsoft Defender for Cloud", "Azure Policy", "Microsoft Entra ID", "Azure Service Health"],
+    answer: 0,
+    explanation: "That is Defender for Cloud: posture management plus workload protection, hybrid included.",
+  },
+
+  // Describe Azure management and governance — 15 questions (~33%)
+  {
+    lesson: "cost-management",
+    kind: "yesno",
+    prompt: "For each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+    options: [
+      "The cost of a VM can differ between Azure regions.",
+      "Outbound data transfer from Azure can incur charges.",
+      "Adding tags to resources increases their cost.",
+    ],
+    answer: 0,
+    answers: [0, 1],
+    explanation: "Region and egress affect cost. Tags are free metadata.",
+  },
+  {
+    lesson: "cost-management",
+    prompt:
+      "Before deploying, you want to estimate the monthly cost of three VMs, a SQL database, and 2 TB of storage. Which tool should you use?",
+    options: ["Azure Pricing Calculator", "Microsoft Cost Management", "Azure Advisor", "Azure Monitor"],
+    answer: 0,
+    explanation: "The Pricing Calculator estimates planned resources.",
+  },
+  {
+    lesson: "cost-management",
+    kind: "complete",
+    prompt: "To receive an email when a subscription's spending reaches 90% of a set amount, create a ____ in Microsoft Cost Management.",
+    options: ["budget", "resource lock", "policy initiative", "management group"],
+    answer: 0,
+    explanation: "Budgets trigger alerts at thresholds.",
+  },
+  {
+    lesson: "cost-management",
+    prompt:
+      "A company runs the same VM sizes in the same region continuously. Which option will provide the greatest discount?",
+    options: ["Azure Reservations", "Spot VMs for production", "Pay-as-you-go", "Azure Hybrid Benefit for Linux"],
+    answer: 0,
+    explanation: "Reservations reward steady, predictable usage with the biggest committed discount.",
+    trap: "Spot is cheaper per hour but can be evicted — wrong for always-on production.",
+  },
+  {
+    lesson: "governance",
+    kind: "yesno",
+    prompt: "For each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+    options: [
+      "Azure Policy can prevent the creation of resources in unapproved regions.",
+      "A ReadOnly lock lets authorized users modify a resource.",
+      "Resource locks are inherited by child resources.",
+    ],
+    answer: 0,
+    answers: [0, 2],
+    explanation: "Policy can deny regions. ReadOnly blocks changes for everyone. Locks inherit down.",
+  },
+  {
+    lesson: "governance",
+    prompt:
+      "Your compliance team needs to discover where sensitive data is stored across Azure and on-premises, and classify it. What should you use?",
+    options: ["Microsoft Purview", "Azure Policy", "Azure Advisor", "Microsoft Defender for Cloud"],
+    answer: 0,
+    explanation: "Purview discovers, classifies, and governs data across environments.",
+  },
+  {
+    lesson: "governance",
+    prompt: "Where can you download Microsoft's independent audit reports for Azure, such as SOC and ISO reports?",
+    options: ["Service Trust Portal", "Azure portal Cost Management", "Azure Status page", "Azure Marketplace"],
+    answer: 0,
+    explanation: "The Service Trust Portal publishes audit reports and compliance documentation.",
+  },
+  {
+    lesson: "governance",
+    kind: "multi",
+    prompt: "Which TWO actions can Azure Policy perform? Each correct answer presents a complete solution.",
+    options: [
+      "Deny the creation of a non-compliant resource",
+      "Audit existing resources and report non-compliance",
+      "Assign the Owner role to a user",
+      "Prevent an Owner from signing in",
+    ],
+    answer: 0,
+    answers: [0, 1],
+    explanation: "Policy denies or audits configurations. Roles are RBAC; sign-in controls are Conditional Access.",
+  },
+  {
+    lesson: "manage-and-deploy",
+    kind: "complete",
+    prompt: "Azure ____ lets you manage on-premises Windows and Linux servers from the Azure portal as if they were Azure resources.",
+    options: ["Arc", "Advisor", "Monitor", "Migrate"],
+    answer: 0,
+    explanation: "Azure Arc projects external resources into Azure Resource Manager.",
+  },
+  {
+    lesson: "manage-and-deploy",
+    kind: "yesno",
+    prompt: "For each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+    options: [
+      "Azure Cloud Shell can be accessed from a web browser.",
+      "Azure CLI can only be used on Windows computers.",
+      "ARM templates use a declarative syntax.",
+    ],
+    answer: 0,
+    answers: [0, 2],
+    explanation: "Cloud Shell runs in the browser. Azure CLI is cross-platform. ARM templates are declarative JSON.",
+  },
+  {
+    lesson: "manage-and-deploy",
+    prompt:
+      "You need to deploy the same set of Azure resources to multiple environments in a consistent, repeatable way. What should you use?",
+    options: ["ARM templates or Bicep", "The Azure portal", "Azure Advisor", "Azure Service Health"],
+    answer: 0,
+    explanation: "Infrastructure as code gives consistent, repeatable deployments.",
+  },
+  {
+    lesson: "manage-and-deploy",
+    prompt: "Which component do the Azure portal, Azure CLI, Azure PowerShell, and REST clients all send requests through?",
+    options: ["Azure Resource Manager", "Azure Arc", "Azure Monitor", "Microsoft Entra Domain Services"],
+    answer: 0,
+    explanation: "ARM is the unified management layer behind all tools.",
+  },
+  {
+    lesson: "monitoring",
+    kind: "yesno",
+    prompt: "For each of the following statements, select Yes if the statement is true. Otherwise, select No.",
+    options: [
+      "Azure Advisor provides recommendations to reduce cost.",
+      "Azure Service Health notifies you about planned maintenance that affects your resources.",
+      "Application Insights monitors the health of Azure datacenters.",
+    ],
+    answer: 0,
+    answers: [0, 1],
+    explanation: "Advisor has a Cost category. Service Health covers planned maintenance. Application Insights monitors your apps, not datacenters.",
+  },
+  {
+    lesson: "monitoring",
+    prompt:
+      "You want to analyze logs collected from VMs and Azure services by writing queries. What should you use?",
+    options: ["Log Analytics", "Azure Advisor", "Azure Service Health", "Azure Pricing Calculator"],
+    answer: 0,
+    explanation: "Log Analytics stores and queries Azure Monitor logs with KQL.",
+  },
+  {
+    lesson: "monitoring",
+    kind: "complete",
+    prompt: "To be notified by SMS when a VM's available memory drops below a threshold, configure an Azure Monitor ____.",
+    options: ["alert", "lock", "tag", "initiative"],
+    answer: 0,
+    explanation: "Alerts with action groups send SMS, email, or trigger automation.",
+  },
+]);

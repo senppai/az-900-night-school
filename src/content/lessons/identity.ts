@@ -1,0 +1,393 @@
+import { LEARN } from "../official-modules";
+import type { Lesson } from "../types";
+
+export const lesson: Lesson = {
+  slug: "identity",
+  order: 11,
+  title: "Azure identity: Microsoft Entra ID",
+  emoji: "🪪",
+  domain: "architecture",
+  minutes: 18,
+  summary:
+    "Microsoft Entra ID, Entra Domain Services, SSO, MFA, passwordless, external identities, and Conditional Access — who you are before anyone asks what you can do.",
+  examFocus:
+    "Microsoft renamed Azure AD to Microsoft Entra ID. If a question still says Azure AD, it means Entra ID. Do not mix Entra ID (cloud directory) with Entra Domain Services (managed legacy domain).",
+  youWillLearn: [
+    "What Microsoft Entra ID is — and why it used to be called Azure AD",
+    "When Microsoft Entra Domain Services shows up instead of Entra ID",
+    "SSO, MFA, and passwordless in plain language",
+    "External identities and Conditional Access as exam-style if/then rules",
+  ],
+  officialModule: {
+    ...LEARN.identity,
+    units: [
+      "Describe Azure directory services",
+      "Describe Azure authentication methods",
+      "Describe Azure external identities",
+      "Describe Azure conditional access",
+    ],
+  },
+  blocks: [
+    {
+      type: "lead",
+      emoji: "🪪",
+      text: "Before Azure lets anyone create a virtual machine or open a storage account, it wants to know who they are. That is identity. This lesson is the guest list, the badges, and the extra checks at the door — not the job titles that decide what you can do once you are inside.",
+    },
+    {
+      type: "p",
+      text: "Keep one pair of words straight from the first minute. Authentication is proving who you are (the badge). Authorization is what you are allowed to do (the job title). This lesson is mostly authentication. Azure role-based access control — the authorization side — gets its own lesson next.",
+    },
+    {
+      type: "heading",
+      text: "1. Microsoft Entra ID (formerly Azure AD)",
+    },
+    {
+      type: "p",
+      text: "Microsoft Entra ID is Azure's cloud identity and access management directory. It stores users, groups, and applications. When someone signs in to the Azure portal, Microsoft 365, or thousands of other apps, Entra ID is usually the service checking the badge. It used to be named Azure Active Directory, or Azure AD. Same product, new name. The exam may still say Azure AD. Answer as if it said Microsoft Entra ID.",
+    },
+    {
+      type: "think",
+      text: "Microsoft Entra ID = the cloud guest list. Users, groups, and apps live here. It is not a virtual machine and it is not a firewall.",
+    },
+    {
+      type: "trap",
+      text: 'Never treat "Azure AD" as a different product. Azure AD was renamed to Microsoft Entra ID. If a question says Azure AD, it means Entra ID.',
+    },
+    {
+      type: "heading",
+      text: "2. Microsoft Entra Domain Services",
+    },
+    {
+      type: "p",
+      text: "Some older apps still speak the language of on-premises Active Directory Domain Services: domain join, LDAP, Kerberos, NTLM, Group Policy. Microsoft Entra Domain Services is a Microsoft-managed domain for those apps. You do not stand up your own domain controllers. Microsoft runs them. Lift-and-shift a legacy app onto Azure VMs, and it can still behave as if it were on a classic domain.",
+    },
+    {
+      type: "compare",
+      items: [
+        {
+          title: "Microsoft Entra ID",
+          subtitle: "Cloud directory",
+          points: [
+            "Users, groups, and modern apps",
+            "Sign-in with protocols such as OAuth, OpenID Connect, and SAML",
+            "SSO, MFA, Conditional Access",
+            "The default identity service for Azure and Microsoft 365",
+          ],
+        },
+        {
+          title: "Microsoft Entra Domain Services",
+          subtitle: "Managed legacy domain",
+          points: [
+            "LDAP, Kerberos, NTLM, Group Policy",
+            "Domain-join Azure VMs that need classic AD",
+            "Microsoft manages the domain controllers",
+            "For apps that cannot speak modern cloud identity yet",
+          ],
+        },
+      ],
+    },
+    {
+      type: "trap",
+      text: "Entra Domain Services is not “Entra ID with extra features.” It is a managed traditional domain for legacy apps. If the scenario says LDAP, Kerberos, or domain-join without managing DCs, think Domain Services — not Entra ID alone.",
+    },
+    {
+      type: "heading",
+      text: "3. Authentication: SSO, MFA, and passwordless",
+    },
+    {
+      type: "p",
+      text: "Single sign-on (SSO) means you sign in once and then open many apps without typing the password again. One badge, many doors. Multifactor authentication (MFA) means Azure wants a second proof — something you know (password), something you have (phone or hardware key), or something you are (fingerprint or face). Passwordless goes further: you sign in with Windows Hello, a FIDO2 security key, or the Microsoft Authenticator app, without a password at all.",
+    },
+    {
+      type: "diagram",
+      title: "Three ways to prove it is you",
+      ascii: `SSO                 MFA                    Passwordless
+────                ───                    ────────────
+One sign-in         Password               Windows Hello
+opens many apps     + phone / key / face   FIDO2 key
+                                           Authenticator app`,
+    },
+    {
+      type: "think",
+      text: "SSO = convenience across apps. MFA = extra proof. Passwordless = proof without a password. They can work together: SSO that still demands MFA when the sign-in looks risky.",
+    },
+    {
+      type: "heading",
+      text: "4. External identities",
+    },
+    {
+      type: "p",
+      text: "Not everyone who signs in works at your company. External identities let people outside your organization use their own credentials with your apps. AZ-900 usually paints two pictures. Business-to-business (B2B) is a guest user: a partner or contractor you invite into your directory. Business-to-consumer (B2C / customer identity) is people signing up for your public app — shoppers, patients, citizens — not employees.",
+    },
+    {
+      type: "example",
+      title: "Two different “outsiders”",
+      body: "A vendor needs access to your Azure DevOps project: invite them as a guest (B2B). A customer creates an account on your shopping website with their Google or email login: that is customer / B2C identity. Same idea — people who are not employees — different relationship.",
+    },
+    {
+      type: "heading",
+      text: "5. Microsoft Entra Conditional Access",
+    },
+    {
+      type: "p",
+      text: "Conditional Access is an if/then policy engine on top of Entra ID. IF a sign-in looks a certain way, THEN require extra proof or block it. Signals include the user, the app, the location, the device, and the risk of the sign-in. It is not a network firewall. It is identity making a decision at sign-in time.",
+    },
+    {
+      type: "example",
+      title: "A classic if/then",
+      body: "IF a finance user signs in from an unknown country, THEN require MFA. IF the device is not marked compliant, THEN block access to the payroll app. You are not rewriting the network. You are adding a smarter bouncer.",
+    },
+    {
+      type: "diagram",
+      title: "Conditional Access in one glance",
+      ascii: `Sign-in attempt
+      │
+      ▼
+ Signals: user · location · device · app · risk
+      │
+      ▼
+ Conditional Access policy
+      │
+      ├── Allow
+      ├── Require MFA / compliant device
+      └── Block`,
+    },
+    {
+      type: "exam",
+      title: "AZ-900 exam points",
+      points: [
+        "Microsoft Entra ID is the cloud identity directory (formerly Azure AD)",
+        "Microsoft Entra Domain Services = managed AD DS for legacy apps",
+        "SSO = one sign-in, many apps",
+        "MFA = more than one proof of identity",
+        "Passwordless = Windows Hello, FIDO2, Authenticator — no password",
+        "External identities = guests and customers, not only employees",
+        "Conditional Access = if this sign-in, then this extra requirement",
+      ],
+    },
+    {
+      type: "cheatsheet",
+      rows: [
+        {
+          term: "Microsoft Entra ID",
+          what: "Cloud identity directory (formerly Azure AD)",
+          remember: "The guest list for Azure and Microsoft 365",
+        },
+        {
+          term: "Entra Domain Services",
+          what: "Managed domain with LDAP / Kerberos",
+          remember: "Legacy apps, Microsoft runs the DCs",
+        },
+        {
+          term: "SSO",
+          what: "Single sign-on",
+          remember: "One login, many apps",
+        },
+        {
+          term: "MFA",
+          what: "Multifactor authentication",
+          remember: "Password plus something else",
+        },
+        {
+          term: "Passwordless",
+          what: "Sign-in without a password",
+          remember: "Hello, FIDO2, Authenticator",
+        },
+        {
+          term: "External identities",
+          what: "People outside your org",
+          remember: "Guests (B2B) and customers (B2C)",
+        },
+        {
+          term: "Conditional Access",
+          what: "If/then rules at sign-in",
+          remember: "Not a firewall — identity policy",
+        },
+      ],
+    },
+    {
+      type: "steps",
+      items: [
+        {
+          title: "Cloud users and modern apps",
+          text: "Microsoft Entra ID (the exam may still say Azure AD).",
+        },
+        {
+          title: "LDAP, Kerberos, domain-join, no DC to manage",
+          text: "Microsoft Entra Domain Services.",
+        },
+        {
+          title: "Sign in once, open Outlook, Teams, and the portal",
+          text: "SSO.",
+        },
+        {
+          title: "Password plus a phone prompt",
+          text: "MFA.",
+        },
+        {
+          title: "Invite a partner into your tenant",
+          text: "External identity / B2B guest.",
+        },
+        {
+          title: "Require MFA when the location looks strange",
+          text: "Conditional Access.",
+        },
+      ],
+    },
+    {
+      type: "onesentence",
+      text: "Microsoft Entra ID (formerly Azure AD) is the cloud directory that authenticates people; Domain Services covers legacy domain apps; SSO, MFA, and passwordless are how you prove it is you; external identities bring guests and customers in; Conditional Access adds if/then rules on top of the sign-in.",
+    },
+    {
+      type: "scenario",
+      title: "Exam-style scene",
+      setup: "A company moves an old line-of-business app to Azure virtual machines. The app must domain-join and use Kerberos. The team does not want to manage domain controllers.",
+      answer: "Microsoft Entra Domain Services",
+      why: "That is the managed traditional domain. Entra ID handles modern cloud sign-in; it does not replace LDAP/Kerberos for that legacy app.",
+    },
+  ],
+  quiz: [
+    {
+      id: "id-1",
+      prompt:
+        "A question on the exam mentions Azure Active Directory (Azure AD). What is that product called today?",
+      options: [
+        "Microsoft Defender for Cloud",
+        "Microsoft Entra ID",
+        "Microsoft Entra Domain Services",
+        "Azure Policy",
+      ],
+      answer: 1,
+      explanation:
+        "Azure AD was renamed to Microsoft Entra ID. Same directory service, new name. Domain Services is a different product for legacy domain workloads.",
+      trap: "Do not pick Domain Services just because it also has Entra in the name.",
+    },
+    {
+      id: "id-2",
+      prompt:
+        "An app on Azure VMs needs LDAP and Kerberos, and the company does not want to run its own domain controllers. What should they use?",
+      options: [
+        "Microsoft Entra ID only",
+        "Resource locks",
+        "Microsoft Entra Domain Services",
+        "Azure Advisor",
+      ],
+      answer: 2,
+      explanation:
+        "Entra Domain Services is a Microsoft-managed domain that speaks LDAP, Kerberos, and NTLM. Entra ID is the cloud directory for modern authentication.",
+    },
+    {
+      id: "id-3",
+      prompt:
+        "Users sign in once and can open Microsoft 365, the Azure portal, and a SaaS app without typing the password again. What is that?",
+      options: [
+        "Conditional Access",
+        "Single sign-on (SSO)",
+        "Azure RBAC",
+        "Defense-in-depth",
+      ],
+      answer: 1,
+      explanation:
+        "SSO is one authentication unlocking many apps. Conditional Access decides extra requirements. RBAC is authorization after you are signed in.",
+    },
+    {
+      id: "id-4",
+      prompt:
+        "A company wants staff to sign in with Windows Hello or a FIDO2 security key instead of a password. What method is that?",
+      options: [
+        "Passwordless authentication",
+        "Azure Policy",
+        "Resource Health",
+        "A ReadOnly lock",
+      ],
+      answer: 0,
+      explanation:
+        "Passwordless uses Windows Hello, FIDO2 keys, or the Microsoft Authenticator app so there is no password to steal or type.",
+    },
+    {
+      id: "id-5",
+      prompt:
+        "You invite a contractor from another company to access a few of your Azure resources using their own work account. What is this an example of?",
+      options: [
+        "Microsoft Entra Domain Services",
+        "An external identity (B2B guest)",
+        "Azure Service Health",
+        "A resource lock",
+      ],
+      answer: 1,
+      explanation:
+        "External identities cover people outside your organization. Inviting a partner or contractor as a guest is the B2B picture. B2C is customers signing up for your app.",
+    },
+    {
+      id: "id-6",
+      prompt:
+        "IF a user signs in from an unknown location, THEN require MFA. Which feature is that?",
+      options: [
+        "Azure Monitor alerts",
+        "Microsoft Entra Conditional Access",
+        "Azure tags",
+        "Network security groups",
+      ],
+      answer: 1,
+      explanation:
+        "Conditional Access is identity if/then policy at sign-in. NSGs filter network traffic. Monitor alerts watch metrics and logs. Tags are metadata.",
+      trap: "Conditional Access is not a firewall. It evaluates the sign-in, not packets.",
+    },
+    {
+      id: "id-7",
+      prompt:
+        "Which is the best description of multifactor authentication (MFA)?",
+      options: [
+        "Requiring two or more forms of verification, such as a password plus a phone prompt",
+        "Using the same password for several apps",
+        "Signing in once to reach many apps",
+        "Giving a user the Owner role",
+      ],
+      answer: 0,
+      explanation:
+        "MFA combines something you know, something you have, and/or something you are. Signing in once to reach many apps is SSO.",
+    },
+    {
+      id: "id-8",
+      prompt:
+        "Which of these is a passwordless sign-in option in Microsoft Entra ID?",
+      options: [
+        "Microsoft Authenticator app sign-in",
+        "A longer password",
+        "SMS-only password reset",
+        "A shared admin account",
+      ],
+      answer: 0,
+      explanation:
+        "Passwordless options include Windows Hello for Business, the Microsoft Authenticator app, and FIDO2 security keys.",
+    },
+    {
+      id: "id-9",
+      prompt:
+        "Authentication vs authorization — which pairing is correct?",
+      options: [
+        "Authentication proves who you are; authorization decides what you can do",
+        "Authentication decides what you can do; authorization proves who you are",
+        "They are the same thing",
+        "Authorization only applies to SaaS",
+      ],
+      answer: 0,
+      explanation:
+        "AuthN = identity (Entra ID sign-in, MFA). AuthZ = permissions (Azure RBAC).",
+    },
+    {
+      id: "id-10",
+      prompt:
+        "A company wants customers (not employees) to sign up to its public app with social or email accounts. Which Entra capability fits?",
+      options: [
+        "External identities for customers (Entra External ID)",
+        "Microsoft Entra Domain Services",
+        "Azure RBAC",
+        "A resource lock",
+      ],
+      answer: 0,
+      explanation:
+        "External identities cover both B2B guests (partners) and customer-facing sign-up (B2C / External ID for customers).",
+    },
+  ],
+};

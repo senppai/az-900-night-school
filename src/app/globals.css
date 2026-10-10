@@ -1,0 +1,223 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-exam: var(--exam);
+  --color-think: var(--think);
+  --color-trap: var(--trap);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: oklch(0.17 0.028 255);
+  --foreground: oklch(0.96 0.012 250);
+  --card: oklch(0.22 0.032 255);
+  --card-foreground: oklch(0.96 0.012 250);
+  --popover: oklch(0.2 0.03 255);
+  --popover-foreground: oklch(0.96 0.012 250);
+  --primary: oklch(0.74 0.13 245);
+  --primary-foreground: oklch(0.18 0.04 255);
+  --secondary: oklch(0.28 0.03 255);
+  --secondary-foreground: oklch(0.95 0.01 250);
+  --muted: oklch(0.27 0.028 255);
+  --muted-foreground: oklch(0.76 0.03 250);
+  --accent: oklch(0.84 0.12 85);
+  --accent-foreground: oklch(0.22 0.04 85);
+  --destructive: oklch(0.71 0.18 22);
+  --border: oklch(0.35 0.03 255);
+  --input: oklch(0.32 0.03 255);
+  --ring: oklch(0.74 0.13 245);
+  --exam: oklch(0.84 0.14 85);
+  --think: oklch(0.8 0.1 185);
+  --trap: oklch(0.75 0.14 18);
+  --chart-1: oklch(0.74 0.13 245);
+  --chart-2: oklch(0.8 0.1 185);
+  --chart-3: oklch(0.84 0.12 85);
+  --chart-4: oklch(0.72 0.14 310);
+  --chart-5: oklch(0.7 0.12 145);
+  --radius: 0.85rem;
+  --sidebar: oklch(0.15 0.03 255);
+  --sidebar-foreground: oklch(0.96 0.012 250);
+  --sidebar-primary: oklch(0.74 0.13 245);
+  --sidebar-primary-foreground: oklch(0.18 0.04 255);
+  --sidebar-accent: oklch(0.24 0.03 255);
+  --sidebar-accent-foreground: oklch(0.96 0.012 250);
+  --sidebar-border: oklch(0.32 0.03 255);
+  --sidebar-ring: oklch(0.74 0.13 245);
+}
+
+.dark {
+  --background: oklch(0.17 0.028 255);
+  --foreground: oklch(0.96 0.012 250);
+  --card: oklch(0.22 0.032 255);
+  --card-foreground: oklch(0.96 0.012 250);
+  --popover: oklch(0.2 0.03 255);
+  --popover-foreground: oklch(0.96 0.012 250);
+  --primary: oklch(0.74 0.13 245);
+  --primary-foreground: oklch(0.18 0.04 255);
+  --secondary: oklch(0.28 0.03 255);
+  --secondary-foreground: oklch(0.95 0.01 250);
+  --muted: oklch(0.27 0.028 255);
+  --muted-foreground: oklch(0.76 0.03 250);
+  --accent: oklch(0.84 0.12 85);
+  --accent-foreground: oklch(0.22 0.04 85);
+  --destructive: oklch(0.71 0.18 22);
+  --border: oklch(0.35 0.03 255);
+  --input: oklch(0.32 0.03 255);
+  --ring: oklch(0.74 0.13 245);
+  --exam: oklch(0.84 0.14 85);
+  --think: oklch(0.8 0.1 185);
+  --trap: oklch(0.75 0.14 18);
+  --chart-1: oklch(0.74 0.13 245);
+  --chart-2: oklch(0.8 0.1 185);
+  --chart-3: oklch(0.84 0.12 85);
+  --chart-4: oklch(0.72 0.14 310);
+  --chart-5: oklch(0.7 0.12 145);
+  --sidebar: oklch(0.15 0.03 255);
+  --sidebar-foreground: oklch(0.96 0.012 250);
+  --sidebar-primary: oklch(0.74 0.13 245);
+  --sidebar-primary-foreground: oklch(0.18 0.04 255);
+  --sidebar-accent: oklch(0.24 0.03 255);
+  --sidebar-accent-foreground: oklch(0.96 0.012 250);
+  --sidebar-border: oklch(0.32 0.03 255);
+  --sidebar-ring: oklch(0.74 0.13 245);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(1200px 500px at 10% -10%, oklch(0.4 0.08 245 / 0.28), transparent 55%),
+      radial-gradient(900px 420px at 100% 0%, oklch(0.45 0.1 280 / 0.18), transparent 50%),
+      radial-gradient(700px 400px at 50% 120%, oklch(0.4 0.08 200 / 0.12), transparent 55%),
+      linear-gradient(180deg, oklch(0.16 0.03 255), oklch(0.18 0.03 255));
+    background-attachment: fixed;
+    min-height: 100%;
+  }
+}
+
+.night-grid {
+  background-image:
+    linear-gradient(oklch(0.8 0.04 250 / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.8 0.04 250 / 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  :root {
+    --background: #ffffff;
+    --foreground: #111111;
+    --card: #ffffff;
+    --card-foreground: #111111;
+    --primary: #0b4f9c;
+    --accent: #7a5200;
+    --muted-foreground: #444444;
+    --trap: #9b1c1c;
+    --think: #0f5e5a;
+    --exam: #7a5200;
+    --border: #cccccc;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111111;
+    font-size: 10pt;
+  }
+
+  .night-grid {
+    background-image: none;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  main {
+    padding-bottom: 0 !important;
+  }
+
+  .print-sheet * {
+    box-shadow: none !important;
+    --tw-ring-shadow: 0 0 #0000 !important;
+  }
+
+  .print-sheet table,
+  .print-sheet tr,
+  .print-sheet li,
+  .print-avoid-break {
+    break-inside: avoid;
+  }
+
+  .print-sheet h2,
+  .print-sheet h3 {
+    break-after: avoid;
+  }
+
+  .print-sheet .print-border {
+    border: 1px solid #cccccc !important;
+  }
+
+  .print-sheet .border-white\/8 {
+    border-color: #dddddd !important;
+  }
+}

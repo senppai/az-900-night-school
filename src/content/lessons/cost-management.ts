@@ -1,0 +1,389 @@
+import { LEARN } from "../official-modules";
+import type { Lesson } from "../types";
+
+export const lesson: Lesson = {
+  slug: "cost-management",
+  order: 13,
+  title: "Azure cost management",
+  emoji: "💰",
+  domain: "governance",
+  minutes: 16,
+  summary:
+    "What makes an Azure bill go up, how the pricing calculator estimates before you deploy, what Cost Management does after you spend, and why tags are labels — not locks.",
+  examFocus:
+    "Pricing Calculator = estimate before you buy. Cost Management = actual spend after you run. Tags = name/value labels for grouping cost. Tags are not resource locks.",
+  youWillLearn: [
+    "The factors that actually move an Azure bill",
+    "When to use the Pricing Calculator (before you deploy, not after)",
+    "What Cost Management can do with budgets and analysis",
+    "Why tags exist — and why they are not locks",
+    "Cost optimization: Reservations, savings plans, Spot, and Azure Hybrid Benefit",
+  ],
+  officialModule: {
+    ...LEARN.cost,
+    units: [
+      "Describe factors that can affect costs in Azure",
+      "Explore the pricing calculator",
+      "Describe the Microsoft Cost Management tool",
+      "Describe the purpose of tags",
+      "Describe cost optimization options in Azure",
+    ],
+  },
+  blocks: [
+    {
+      type: "lead",
+      emoji: "💰",
+      text: "Azure is a consumption service. You pay for what you use, where you use it, and how you committed to pay. This lesson is the grocery list, the estimate before you shop, the receipt after, and the sticky notes that say which department bought the milk.",
+    },
+    {
+      type: "p",
+      text: "Three clocks matter. Before you deploy, you estimate. After resources are running, you watch real spend. Across both, you label resources so finance can see who owns which line on the bill. Mix those clocks up and the exam will catch you.",
+    },
+    {
+      type: "heading",
+      text: "1. Factors that affect costs",
+    },
+    {
+      type: "p",
+      text: "The same VM size is not the same price everywhere. Region matters. Resource type and SKU matter (a tiny B-series VM is not an M-series monster). Usage meters matter: hours running, storage gigabytes, transactions, and especially bandwidth. Inbound data to Azure is often free or cheap; outbound data leaving Azure is where bills surprise people. How you buy matters too: pay-as-you-go, reservations or savings plans (commit for 1 or 3 years, lower rate), Spot VMs (spare capacity, can be evicted), and Azure Hybrid Benefit (reuse eligible Windows Server or SQL licenses).",
+    },
+    {
+      type: "list",
+      items: [
+        "Resource type and SKU — what you run, and how big it is",
+        "Region — prices differ by geography",
+        "Meters / usage — time, storage, operations",
+        "Bandwidth (egress) — data leaving Azure",
+        "Purchase model — pay-as-you-go, reservations, Spot, Hybrid Benefit",
+        "Redundancy and extras — geo-replication, support plans, marketplace images",
+      ],
+    },
+    {
+      type: "diagram",
+      title: "Bandwidth in one picture",
+      ascii: `  On-prem / internet          Azure
+         │                      │
+         │   inbound (often free)
+         │ ───────────────────► │
+         │                      │
+         │   outbound (usually $)
+         │ ◄─────────────────── │
+         │                      │
+         Traffic between regions can also cost.`,
+    },
+    {
+      type: "trap",
+      text: "“We turned the VM off in the portal” still leaves disks, public IPs, and some other resources billing. Stopped (deallocated) is the state that stops VM compute charges. Also: a reservation is a billing discount, not a different kind of virtual machine.",
+    },
+    {
+      type: "heading",
+      text: "2. Pricing Calculator",
+    },
+    {
+      type: "p",
+      text: "The Azure Pricing Calculator is a public website. You add the services you are thinking about, pick region and size, and it estimates a monthly cost before anything exists in your subscription. It is a planning tool. It does not see your real bill.",
+    },
+    {
+      type: "compare",
+      items: [
+        {
+          title: "Pricing Calculator",
+          subtitle: "Before you deploy",
+          points: [
+            "Estimate proposed Azure resources",
+            "No subscription required to play with it",
+            "Great for “what would this architecture cost?”",
+          ],
+        },
+        {
+          title: "Azure Migrate business case",
+          subtitle: "On-prem vs Azure",
+          points: [
+            "Replaces the retired standalone TCO Calculator",
+            "Compares running servers on-prem vs in Azure",
+            "Migration business case — not your live bill",
+          ],
+        },
+        {
+          title: "Cost Management",
+          subtitle: "After you spend",
+          points: [
+            "Real usage and invoices",
+            "Budgets, alerts, cost analysis",
+            "Lives in the Azure portal against your account",
+          ],
+        },
+      ],
+    },
+    {
+      type: "think",
+      text: "Pricing Calculator = shopping-cart estimate. Azure Migrate business case = “should we leave the old datacenter?” (older material calls this the TCO Calculator). Cost Management = looking at the receipt.",
+    },
+    {
+      type: "heading",
+      text: "3. Cost Management capabilities",
+    },
+    {
+      type: "p",
+      text: "Microsoft Cost Management (often shown with Billing) is where you analyze actual spend. You can break costs by subscription, resource group, service, and tag. You can set a budget — for example, $5,000 this month on the marketing subscription — and alerts when you hit 80% or 100%. You can export data to a storage account for finance tools. It can show recommendations, but it does not deploy architecture for you and it does not lock a resource from deletion.",
+    },
+    {
+      type: "exam",
+      title: "What Cost Management is for",
+      points: [
+        "Cost analysis of real Azure spend",
+        "Budgets and alerting when you approach a limit",
+        "Breakdowns by tag, resource, and service",
+        "Helping people take action — it does not replace RBAC or Policy",
+      ],
+    },
+    {
+      type: "heading",
+      text: "4. The purpose of tags",
+    },
+    {
+      type: "p",
+      text: "A tag is a name/value label you attach to a resource or resource group: Department = Finance, Project = Apollo, Environment = Prod. Azure can roll costs up by those labels so each team sees its slice of the bill. Tags are also handy for operations (“who owns this?”). They are metadata. They do not change how the resource runs.",
+    },
+    {
+      type: "example",
+      title: "A tag that finance will actually use",
+      body: "Every resource gets CostCenter = 1042 and Owner = ada@contoso.com. Cost Management can then show “how much did cost center 1042 spend in March?” without renaming resource groups.",
+    },
+    {
+      type: "trap",
+      text: "Tags are not resource locks. A tag will not stop someone from deleting a VM. A lock will. Tags are also not Policy — though Policy can require that a tag exists. If the question is “group costs by department,” the answer is tags. If it is “prevent deletion,” the answer is a lock.",
+    },
+    {
+      type: "think",
+      text: "Tags = sticky notes. Useful, cheap, easy to ignore if nobody applies them. Locks = padlocks. Different object, different job.",
+    },
+    {
+      type: "heading",
+      text: "5. Cost optimization options",
+    },
+    {
+      type: "p",
+      text: "The official module now ends with ways to pay less for the same work. Azure Reservations: commit to a specific resource (for example a VM size in a region) for 1 or 3 years and get a large discount — best for steady, predictable workloads. Azure savings plan for compute: commit to a fixed hourly spend on compute for 1 or 3 years; the discount applies across VM sizes, regions, and some PaaS compute, so it is more flexible than a reservation. Spot pricing: use spare Azure capacity at a deep discount, but Azure can evict the VM when it needs the capacity back — only for interruptible jobs. Azure Hybrid Benefit: reuse Windows Server and SQL Server licenses you already own (with Software Assurance) to cut the price. And the everyday habits: right-size VMs, shut down or deallocate what is idle, and act on Azure Advisor's cost recommendations.",
+    },
+    {
+      type: "table",
+      caption: "Pick the discount that fits the workload",
+      headers: ["Option", "You commit to", "Best for"],
+      rows: [
+        ["Reservations", "A specific resource for 1 or 3 years", "Steady VMs that never change size or region"],
+        ["Savings plan for compute", "A fixed hourly compute spend for 1 or 3 years", "Steady spend, but sizes or regions change"],
+        ["Spot", "Nothing — can be evicted", "Batch, test, interruptible work"],
+        ["Azure Hybrid Benefit", "Licenses you already own", "Existing Windows Server / SQL Server licenses"],
+      ],
+    },
+    {
+      type: "trap",
+      text: "Reservation = locked to a resource type and region. Savings plan = locked to a spend amount, flexible on what you run. Spot is never the answer for production that must stay up.",
+    },
+    {
+      type: "cheatsheet",
+      rows: [
+        {
+          term: "Savings plan for compute",
+          what: "Commit to hourly compute spend for 1 or 3 years",
+          remember: "Flexible across sizes and regions",
+        },
+        {
+          term: "Region / SKU / meters",
+          what: "Core cost factors",
+          remember: "Where, how big, how much you used",
+        },
+        {
+          term: "Bandwidth",
+          what: "Data leaving Azure",
+          remember: "Egress is the usual surprise",
+        },
+        {
+          term: "Reservations / savings plans / Spot / Hybrid Benefit",
+          what: "Ways to pay less",
+          remember: "Commit, spare capacity, or reuse licenses",
+        },
+        {
+          term: "Pricing Calculator",
+          what: "Estimate before deploy",
+          remember: "Shopping list, not the receipt",
+        },
+        {
+          term: "Cost Management",
+          what: "Actual spend, budgets, alerts",
+          remember: "After resources are running",
+        },
+        {
+          term: "Tags",
+          what: "Name/value metadata",
+          remember: "Cost allocation — not a lock",
+        },
+      ],
+    },
+    {
+      type: "steps",
+      items: [
+        {
+          title: "“What would this architecture cost?”",
+          text: "Pricing Calculator.",
+        },
+        {
+          title: "“Is Azure cheaper than our datacenter?”",
+          text: "An Azure Migrate business case (formerly the TCO Calculator).",
+        },
+        {
+          title: "“We are at 90% of this month's budget.”",
+          text: "Cost Management budgets and alerts.",
+        },
+        {
+          title: "“Show spend by department.”",
+          text: "Tags, then Cost Management analysis.",
+        },
+        {
+          title: "“Do not let anyone delete this.”",
+          text: "A resource lock — not a tag.",
+        },
+      ],
+    },
+    {
+      type: "onesentence",
+      text: "Azure cost depends on what you run, where you run it, how much you use (especially egress), and how you pay; the Pricing Calculator estimates before you deploy, Cost Management watches the real bill, and tags label resources for that bill without protecting them from deletion.",
+    },
+    {
+      type: "scenario",
+      title: "Exam-style scene",
+      setup: "A finance partner wants each Azure resource labeled so next quarter's invoice can be split by department. They also ask whether those labels will stop engineers from deleting production databases.",
+      answer: "Use tags for the split; they will not prevent deletion. Add resource locks if you need delete protection.",
+      why: "Tags are metadata for grouping and reporting. Locks are the padlock. The exam loves offering tags as a fake answer to a deletion question.",
+    },
+  ],
+  quiz: [
+    {
+      id: "cost-1",
+      prompt: "Which factor commonly changes the price of the same VM size?",
+      options: [
+        "The name of the resource group",
+        "The Azure region you deploy to",
+        "Whether the resource has a lock",
+        "Whether Azure Advisor is enabled",
+      ],
+      answer: 1,
+      explanation:
+        "Prices vary by region. Resource group names, locks, and Advisor do not set the meter rate.",
+    },
+    {
+      id: "cost-2",
+      prompt: "Which traffic is most likely to appear as a surprise on an Azure bill?",
+      options: [
+        "Inbound data to Azure from the internet",
+        "Outbound data leaving Azure (egress)",
+        "Traffic inside a single virtual network in one region",
+        "Reading a free documentation page",
+      ],
+      answer: 1,
+      explanation:
+        "Egress — data leaving Azure — is the classic bandwidth cost. Inbound is often free. Same-VNet traffic in one region is typically not billed like internet egress.",
+    },
+    {
+      id: "cost-3",
+      prompt:
+        "You want a monthly estimate for a proposed architecture before anything is deployed. Which tool?",
+      options: [
+        "Azure Cost Management",
+        "Azure Pricing Calculator",
+        "Azure Service Health",
+        "Microsoft Purview",
+      ],
+      answer: 1,
+      explanation:
+        "Pricing Calculator estimates proposed resources. Cost Management analyzes actual spend after you have usage. Service Health is about incidents. Purview is data governance.",
+      trap: "Calculator = before. Cost Management = after.",
+    },
+    {
+      id: "cost-4",
+      prompt: "A team wants an alert when a subscription hits 80% of a $10,000 monthly spend limit. What do they use?",
+      options: [
+        "A CanNotDelete lock",
+        "Microsoft Entra Conditional Access",
+        "A budget in Cost Management",
+        "Azure Cloud Shell",
+      ],
+      answer: 2,
+      explanation:
+        "Cost Management budgets watch real spend and can alert you. Locks prevent delete. Conditional Access is identity. Cloud Shell is a terminal.",
+    },
+    {
+      id: "cost-5",
+      prompt: "What is the purpose of Azure tags?",
+      options: [
+        "To prevent a resource from being deleted",
+        "To attach name/value metadata for organization and cost allocation",
+        "To encrypt a storage account",
+        "To assign the Owner role",
+      ],
+      answer: 1,
+      explanation:
+        "Tags are labels. They help you group and report. They are not locks, not encryption, and not RBAC.",
+    },
+    {
+      id: "cost-6",
+      prompt: "A colleague says, “I tagged the VM Environment=Prod, so nobody can delete it.” What is wrong?",
+      options: [
+        "Nothing — tags act as CanNotDelete locks",
+        "Tags are metadata only; a resource lock is what prevents deletion",
+        "Tags only work on subscriptions, not VMs",
+        "You must tag the region instead",
+      ],
+      answer: 1,
+      explanation:
+        "Tags do not protect resources. Apply a CanNotDelete or ReadOnly lock if you need that protection. Policy can require tags, but that still is not a lock.",
+    },
+    {
+      id: "cost-7",
+      prompt:
+        "A company commits to spend a fixed amount per hour on compute for 3 years, but wants the discount to apply even when it changes VM sizes and regions. What should it buy?",
+      options: [
+        "An Azure savings plan for compute",
+        "An Azure Reservation for one VM size",
+        "Spot VMs",
+        "A Cost Management budget",
+      ],
+      answer: 0,
+      explanation:
+        "Savings plans commit to a spend amount and apply flexibly across compute. Reservations are tied to a specific resource type and region.",
+    },
+    {
+      id: "cost-8",
+      prompt:
+        "A company already owns Windows Server licenses with Software Assurance. Which option lowers the cost of running Windows VMs in Azure?",
+      options: [
+        "Azure Hybrid Benefit",
+        "Azure Spot pricing",
+        "Geo-redundant storage",
+        "Azure Arc",
+      ],
+      answer: 0,
+      explanation:
+        "Azure Hybrid Benefit lets you bring eligible on-premises Windows Server and SQL Server licenses to Azure at a reduced rate.",
+    },
+    {
+      id: "cost-9",
+      prompt:
+        "A nightly batch job can be stopped and restarted at any time. Which option gives the deepest compute discount?",
+      options: ["Spot VMs", "Pay-as-you-go VMs", "Premium SSD disks", "Dedicated hosts"],
+      answer: 0,
+      explanation:
+        "Spot VMs use spare capacity at a large discount and can be evicted — perfect for interruptible batch work.",
+    },
+    {
+      id: "cost-10",
+      prompt:
+        "Which Azure service gives personalized recommendations such as resizing or shutting down underused VMs to save money?",
+      options: ["Azure Advisor", "Azure DNS", "Microsoft Purview", "Azure Service Health"],
+      answer: 0,
+      explanation:
+        "Azure Advisor's Cost category recommends right-sizing, shutting down idle resources, and buying reservations. Cost Management surfaces those recommendations too.",
+    },
+  ],
+};
