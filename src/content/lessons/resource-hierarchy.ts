@@ -140,6 +140,7 @@ export const lesson: Lesson = {
           ▼
        Resources    — the policy still applies here`,
     },
+    { type: "interactive", diagram: "resource-hierarchy" },
     {
       type: "trap",
       text: "You cannot put a subscription inside a resource group. The tree only goes management groups → subscriptions → resource groups → resources.",

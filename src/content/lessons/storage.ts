@@ -114,6 +114,7 @@ export const lesson: Lesson = {
   GZRS   :  zones in primary  ~~~~copy~~~~>  paired region
   RA-GRS / RA-GZRS : same as GRS / GZRS, plus you can read the secondary`,
     },
+    { type: "interactive", diagram: "storage-redundancy" },
     {
       type: "trap",
       text: "GRS does not by itself let you read the secondary while the primary is healthy. That extra is the RA- (read-access) variants.",

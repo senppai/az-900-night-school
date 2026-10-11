@@ -3,10 +3,10 @@
 import { useMemo, useState } from "react";
 import { Quiz } from "@/components/quiz";
 import { useProgress } from "@/components/progress-provider";
-import { practiceExam } from "@/content/practice-exam";
+import { practiceDomain, practiceExam } from "@/content/practice-exam";
 
 export function PracticeView() {
-  const { savePracticeScore, state } = useProgress();
+  const { savePracticeScore, recordAnswers, state } = useProgress();
   const [started, setStarted] = useState(false);
   const questions = useMemo(() => practiceExam, []);
 
@@ -54,6 +54,11 @@ export function PracticeView() {
         questions={questions}
         title="AZ-900 style"
         onFinished={(correct, total) => savePracticeScore(correct, total)}
+        onAnswer={(question, correct) =>
+          recordAnswers([
+            { questionId: question.id, correct, source: "practice", domain: practiceDomain(question.id) },
+          ])
+        }
       />
     </div>
   );

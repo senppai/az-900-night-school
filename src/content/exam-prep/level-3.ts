@@ -1,6 +1,7 @@
+import type { ExamQuestion } from "../types";
 import { tag } from "./tag";
 
-export const level3 = tag("l3", [
+const base = tag("l3", [
   // 01 · Cloud computing
   {
     lesson: "cloud-computing",
@@ -1128,3 +1129,80 @@ export const level3 = tag("l3", [
     explanation: "Metrics are numbers over time; logs are event records.",
   },
 ]);
+
+/** Separate id prefix so ids in saved Level 3 runs keep pointing at the same questions. */
+const interactive = tag("l3m", [
+  {
+    lesson: "cloud-models",
+    kind: "match",
+    prompt: "Match each description to the cloud model.",
+    categories: ["Public cloud", "Private cloud", "Hybrid cloud"],
+    options: [
+      "Resources owned by a provider and shared by many organizations, with pay-as-you-go pricing",
+      "Resources used exclusively by one organization, which keeps full control",
+      "An on-premises datacenter connected to Azure so workloads and data can move between them",
+    ],
+    answer: 0,
+    answers: [0, 1, 2],
+    explanation:
+      "Shared provider infrastructure = public. Exclusive use by one organization = private. On-premises plus public cloud working together = hybrid.",
+  },
+  {
+    lesson: "regions-and-zones",
+    kind: "order",
+    prompt: "Arrange these Azure physical infrastructure terms from the smallest to the largest.",
+    options: ["Datacenter", "Availability zone", "Region", "Geography"],
+    answer: 0,
+    explanation:
+      "An availability zone is one or more datacenters with independent power, cooling, and networking. A region contains multiple datacenters (usually three or more zones). A geography contains one or more regions and respects data residency boundaries.",
+  },
+  {
+    lesson: "compute",
+    kind: "match",
+    prompt: "Match each requirement to the Azure compute option.",
+    categories: [
+      "Azure Virtual Machines",
+      "Azure Container Instances",
+      "Azure Functions",
+      "Azure Virtual Desktop",
+    ],
+    options: [
+      "Full control of the operating system for a legacy application",
+      "Run a single container quickly without managing servers or an orchestrator",
+      "Run a small piece of code when a message arrives, billed only when it runs",
+      "Give remote workers a Windows desktop hosted in Azure",
+    ],
+    answer: 0,
+    answers: [0, 1, 2, 3],
+    explanation:
+      "VMs = IaaS with OS control. ACI = the simplest way to run a container. Functions = event-driven serverless code. Azure Virtual Desktop = desktop and app virtualization.",
+  },
+  {
+    lesson: "security",
+    kind: "match",
+    prompt: "Match each control to the defense-in-depth layer it belongs to.",
+    categories: ["Physical security", "Identity and access", "Network", "Data"],
+    options: [
+      "Biometric access and guards at datacenter doors",
+      "Multifactor authentication for administrators",
+      "Network security groups that filter traffic between subnets",
+      "Encrypting a database at rest",
+    ],
+    answer: 0,
+    answers: [0, 1, 2, 3],
+    explanation:
+      "Defense in depth stacks layers: physical, identity and access, perimeter, network, compute, application, and data. Each control slows an attacker at its own layer.",
+  },
+]);
+
+/** Each interactive question goes right after the last base question of its lesson. */
+function interleave(questions: ExamQuestion[], extras: ExamQuestion[]) {
+  const merged = [...questions];
+  for (const extra of extras) {
+    const lastIndex = merged.findLastIndex((question) => question.lesson === extra.lesson);
+    merged.splice(lastIndex + 1 || merged.length, 0, extra);
+  }
+  return merged;
+}
+
+export const level3 = interleave(base, interactive);

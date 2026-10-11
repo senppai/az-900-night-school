@@ -129,6 +129,7 @@ export const lesson: Lesson = {
       │
       └───────────────────────────────────►  your subnets`,
     },
+    { type: "interactive", diagram: "hybrid-connectivity" },
     {
       type: "trap",
       text: "ExpressRoute is not “a faster VPN.” It is a different path: private connectivity. VPN Gateway still uses the internet; it just encrypts what it sends.",

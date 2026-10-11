@@ -1,6 +1,6 @@
 export type DomainId = "cloud" | "architecture" | "governance";
 
-export type QuestionKind = "single" | "multi" | "yesno" | "complete";
+export type QuestionKind = "single" | "multi" | "yesno" | "complete" | "match" | "order";
 
 export type QuizQuestion = {
   id: string;
@@ -11,8 +11,14 @@ export type QuizQuestion = {
   options: string[];
   /** Index of the correct option for "single" and "complete". */
   answer: number;
-  /** Correct indexes for "multi"; statements that are true for "yesno". */
+  /**
+   * Correct indexes for "multi"; statements that are true for "yesno"; for "match", the
+   * category index of each option; for "order", option indexes in the right sequence
+   * (omit it when options are written in the right order).
+   */
   answers?: number[];
+  /** Targets that "match" options are assigned to. */
+  categories?: string[];
   explanation: string;
   trap?: string;
 };
@@ -43,6 +49,15 @@ export type LessonBlock =
   | { type: "trap"; text: string }
   | { type: "example"; title: string; body: string; code?: string; caption?: string }
   | { type: "diagram"; title?: string; ascii: string }
+  | {
+      type: "interactive";
+      diagram:
+        | "shared-responsibility"
+        | "resource-hierarchy"
+        | "storage-redundancy"
+        | "regions-zones"
+        | "hybrid-connectivity";
+    }
   | { type: "table"; caption?: string; headers: string[]; rows: string[][] }
   | { type: "cheatsheet"; rows: CheatRow[] }
   | { type: "onesentence"; text: string }

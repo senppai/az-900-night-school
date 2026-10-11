@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ExamAids } from "@/components/exam-aids";
+import { ExamClock, ExamSimulator, useCountdown, type ExamRun } from "@/components/exam-simulator";
 import { QuestionCard } from "@/components/question-card";
 import { useProgress } from "@/components/progress-provider";
 import { DOMAINS, SITE } from "@/content/catalog";
@@ -13,22 +14,14 @@ import { correctIndexes, describeAnswer, shuffled, withShuffledOptions } from "@
 import type { SavedExamRun, Tally } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 
-type Run = {
-  level: ExamLevel;
-  questions: ExamQuestion[];
-  index: number;
-  results: Record<string, boolean>;
-  picked: Record<string, number[]>;
-  lessons: string[];
-  deadline: number | null;
-};
+type Run = ExamRun;
 
 const PASS_PERCENT = 70;
 
 export function ExamPrepView() {
   const [run, setRun] = useState<Run | null>(null);
   const [finished, setFinished] = useState<Run | null>(null);
-  const { saveExamResult } = useProgress();
+  const { saveExamResult, recordAnswers } = useProgress();
 
   function start(level: ExamLevel, lessonFilter: string[] = []) {
     const pool =
@@ -69,6 +62,19 @@ export function ExamPrepView() {
   }
 
   function finish(done: Run) {
+    if (done.level.examMode) {
+      recordAnswers(
+        done.questions
+          .filter((question) => question.id in done.results)
+          .map((question) => ({
+            questionId: question.id,
+            correct: done.results[question.id],
+            source: done.level.id,
+            lesson: question.lesson,
+            domain: question.domain,
+          })),
+      );
+    }
     saveExamResult(done.level.id, tallyBy(done, (question) => question.lesson));
     setRun(null);
     setFinished(done);
@@ -76,14 +82,8 @@ export function ExamPrepView() {
   }
 
   if (run) {
-    return (
-      <ExamRunner
-        run={run}
-        onChange={setRun}
-        onFinish={finish}
-        onExit={() => setRun(null)}
-      />
-    );
+    const props = { run, onChange: setRun, onFinish: finish, onExit: () => setRun(null) };
+    return run.level.examMode ? <ExamSimulator {...props} /> : <ExamRunner {...props} />;
   }
 
   if (finished) {
@@ -243,19 +243,12 @@ function ExamRunner({
   onFinish: (run: Run) => void;
   onExit: () => void;
 }) {
-  const { saveExamRun } = useProgress();
-  const [now, setNow] = useState<number | null>(null);
+  const { saveExamRun, recordAnswers } = useProgress();
+  const remaining = useCountdown(run.deadline);
   const question = run.questions[run.index];
   const last = run.index + 1 >= run.questions.length;
   const answered = Object.keys(run.results).length;
-  const remaining = run.deadline && now !== null ? Math.max(0, run.deadline - now) : null;
   const expired = remaining === 0;
-
-  useEffect(() => {
-    if (!run.deadline) return;
-    const id = window.setInterval(() => setNow(Date.now()), 500);
-    return () => window.clearInterval(id);
-  }, [run.deadline]);
 
   if (!question) return null;
 
@@ -273,11 +266,15 @@ function ExamRunner({
         lessons: run.lessons,
       });
     }
-    if (run.level.examMode) {
-      if (last) onFinish(next);
-      else onChange({ ...next, index: run.index + 1 });
-      return;
-    }
+    recordAnswers([
+      {
+        questionId: question.id,
+        correct,
+        source: run.level.id,
+        lesson: question.lesson,
+        domain: question.domain,
+      },
+    ]);
     onChange(next);
   }
 
@@ -295,18 +292,7 @@ function ExamRunner({
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {run.deadline ? (
-            <span
-              className={cn(
-                "rounded-lg px-3 py-1.5 font-mono text-sm ring-1",
-                remaining !== null && remaining < 5 * 60_000
-                  ? "bg-trap/15 text-trap ring-trap/40"
-                  : "bg-white/6 ring-white/10",
-              )}
-            >
-              {formatClock(remaining ?? (run.level.timeLimit ?? 0) * 60_000)}
-            </span>
-          ) : null}
+          {run.deadline ? <ExamClock remaining={remaining} limitMinutes={run.level.timeLimit ?? 0} /> : null}
           <button
             type="button"
             onClick={onExit}
@@ -350,28 +336,22 @@ function ExamRunner({
         </section>
       ) : (
         <section className="relative z-10 rounded-2xl bg-card p-6 ring-1 ring-white/10">
-          {run.level.examMode ? null : (
-            <p className="mb-3 text-xs text-muted-foreground">
-              {lesson ? `${lesson.emoji} ${lesson.title}` : null}
-            </p>
-          )}
+          <p className="mb-3 text-xs text-muted-foreground">
+            {lesson ? `${lesson.emoji} ${lesson.title}` : null}
+          </p>
           <QuestionCard
             key={question.id}
             question={question}
-            feedback={!run.level.examMode}
+            feedback
             onSubmit={record}
             after={
-              run.level.examMode ? null : (
-                <button
-                  type="button"
-                  onClick={() =>
-                    last ? onFinish(run) : onChange({ ...run, index: run.index + 1 })
-                  }
-                  className="h-9 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary/80"
-                >
-                  {last ? "See results" : "Next question"}
-                </button>
-              )
+              <button
+                type="button"
+                onClick={() => (last ? onFinish(run) : onChange({ ...run, index: run.index + 1 }))}
+                className="h-9 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary/80"
+              >
+                {last ? "See results" : "Next question"}
+              </button>
             }
           />
         </section>
@@ -432,6 +412,14 @@ function ExamResults({
           >
             Back to Exam Prep
           </button>
+          {misses.some((question) => question.id in run.results) ? (
+            <Link
+              href="/mistakes"
+              className="inline-flex h-9 items-center rounded-lg px-3 text-sm ring-1 ring-trap/40 text-trap hover:bg-trap/10"
+            >
+              Misses saved to your mistake notebook →
+            </Link>
+          ) : null}
         </div>
       </header>
 
@@ -563,10 +551,4 @@ function tallyBy(run: Run, key: (question: ExamQuestion) => string): Record<stri
 
 function ratio(tally: Tally) {
   return tally.total ? tally.correct / tally.total : 0;
-}
-
-function formatClock(ms: number) {
-  const seconds = Math.ceil(ms / 1000);
-  const minutes = Math.floor(seconds / 60);
-  return `${String(minutes).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
 }

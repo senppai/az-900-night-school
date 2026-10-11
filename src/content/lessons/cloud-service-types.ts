@@ -107,6 +107,7 @@ Hardware         Microsoft     Microsoft     Microsoft
 
 * Your code on PaaS; Microsoft's app on SaaS`,
     },
+    { type: "interactive", diagram: "shared-responsibility" },
     {
       type: "heading",
       text: "The comparison the exam will actually give you",

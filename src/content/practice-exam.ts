@@ -1,4 +1,4 @@
-import type { QuizQuestion } from "./types";
+import type { DomainId, QuizQuestion } from "./types";
 
 export const practiceExam: QuizQuestion[] = [
   // Domain 1 — Cloud concepts (~28%)
@@ -666,3 +666,11 @@ export const practiceExam: QuizQuestion[] = [
       "Efficient, shared, large-scale datacenters and renewable energy reduce the footprint per workload. Customers still help by right-sizing and turning off idle resources.",
   },
 ];
+
+/** Relies on the domain sections above: pe-1–11 cloud, pe-12–26 architecture, the rest governance. */
+export function practiceDomain(id: string): DomainId {
+  const number = Number(id.replace("pe-", ""));
+  if (number <= 11) return "cloud";
+  if (number <= 26) return "architecture";
+  return "governance";
+}

@@ -60,10 +60,21 @@ export const level5 = tag("l5", [
   },
   {
     lesson: "shared-responsibility",
-    prompt: "Which cloud service type places the MOST security responsibility on the customer?",
-    options: ["IaaS", "PaaS", "SaaS", "They are equal"],
+    kind: "match",
+    prompt: "Match each responsibility to who owns it in the shared responsibility model.",
+    categories: ["Always the customer", "Always Microsoft", "Varies by service type"],
+    options: [
+      "Information and data",
+      "Physical network",
+      "Operating system",
+      "Devices (mobile and PCs)",
+      "Identity and directory infrastructure",
+    ],
     answer: 0,
-    explanation: "IaaS leaves the most layers to the customer.",
+    answers: [0, 1, 2, 0, 2],
+    explanation:
+      "Data, devices, and accounts and identities are always yours. Physical hosts, network, and datacenter are always Microsoft's. The OS, network controls, applications, and identity and directory infrastructure shift with IaaS, PaaS, or SaaS.",
+    trap: "Identity and directory INFRASTRUCTURE varies, but your accounts and identities are always your job.",
   },
   {
     lesson: "cloud-models",
@@ -105,10 +116,19 @@ export const level5 = tag("l5", [
   },
   {
     lesson: "cloud-benefits",
-    prompt: "Which benefit of the cloud is described as \"the ability to recover from failures and continue to function\"?",
-    options: ["Reliability", "Elasticity", "Agility", "Vertical scaling"],
+    kind: "match",
+    prompt: "Match each scenario to the cloud benefit it demonstrates.",
+    categories: ["Scalability", "Reliability", "Predictability", "Manageability"],
+    options: [
+      "Adding VM instances automatically when traffic grows",
+      "Failing over to another region and continuing to run during an outage",
+      "Forecasting next month's spend with budgets and the Pricing Calculator",
+      "Deploying and configuring resources with templates and automation",
+    ],
     answer: 0,
-    explanation: "That is Microsoft's definition of reliability.",
+    answers: [0, 1, 2, 3],
+    explanation:
+      "More instances under load = scalability. Recovering from failure and continuing to function = reliability. Knowing costs ahead = (cost) predictability. Templates and automation = management of the cloud.",
   },
   {
     lesson: "cloud-service-types",
@@ -156,11 +176,12 @@ export const level5 = tag("l5", [
   },
   {
     lesson: "resource-hierarchy",
-    kind: "complete",
-    prompt: "You can use ____ to apply governance conditions to multiple Azure subscriptions at once.",
-    options: ["management groups", "resource groups", "availability zones", "tags"],
+    kind: "order",
+    prompt: "Arrange the Azure organization levels from the broadest scope to the narrowest.",
+    options: ["Management groups", "Subscriptions", "Resource groups", "Resources"],
     answer: 0,
-    explanation: "Management groups sit above subscriptions and pass down policy and RBAC.",
+    explanation:
+      "Management groups contain subscriptions, subscriptions contain resource groups, and resource groups contain resources. Policy and RBAC assigned higher up are inherited downward.",
   },
   {
     lesson: "resource-hierarchy",
@@ -207,11 +228,20 @@ export const level5 = tag("l5", [
   },
   {
     lesson: "networking",
-    kind: "complete",
-    prompt: "To connect two Azure virtual networks so resources can communicate privately over the Microsoft backbone, use ____.",
-    options: ["VNet peering", "a point-to-site VPN", "Azure DNS", "a public endpoint"],
+    kind: "match",
+    prompt: "Match each requirement to the Azure networking service that meets it.",
+    categories: ["VPN Gateway", "ExpressRoute", "VNet peering", "Azure DNS"],
+    options: [
+      "An encrypted connection from a branch office to Azure over the public internet",
+      "A private connection from your datacenter through a connectivity provider that does not use the public internet",
+      "Let resources in two Azure virtual networks talk privately over the Microsoft backbone",
+      "Host the name records for your company's domain on Azure infrastructure",
+    ],
     answer: 0,
-    explanation: "VNet peering links VNets privately.",
+    answers: [0, 1, 2, 3],
+    explanation:
+      "VPN Gateway sends encrypted traffic over the internet. ExpressRoute is a private link via a provider. Peering joins VNets. Azure DNS hosts DNS zones.",
+    trap: "ExpressRoute is not encrypted by default — what it adds is privacy from the internet and predictable performance.",
   },
   {
     lesson: "networking",
@@ -244,12 +274,20 @@ export const level5 = tag("l5", [
   },
   {
     lesson: "storage",
-    kind: "multi",
-    prompt: "Which TWO storage redundancy options protect data if an entire availability zone fails? Each correct answer presents a complete solution.",
-    options: ["ZRS", "GZRS", "LRS", "A ReadOnly lock on the storage account"],
+    kind: "match",
+    prompt: "Match each description to the storage redundancy option.",
+    categories: ["LRS", "ZRS", "GRS", "GZRS"],
+    options: [
+      "Three copies in a single datacenter in the primary region only",
+      "Three copies across availability zones in the primary region only",
+      "Three copies in one datacenter in the primary region, plus copies in a secondary region",
+      "Copies across availability zones in the primary region, plus copies in a secondary region",
+    ],
     answer: 0,
-    answers: [0, 1],
-    explanation: "ZRS and GZRS replicate across zones in the primary region. LRS stays in one datacenter.",
+    answers: [0, 1, 2, 3],
+    explanation:
+      "LRS = one datacenter. ZRS = three zones. GRS = LRS in the primary plus asynchronous copies in the paired secondary region. GZRS = ZRS in the primary plus a secondary region.",
+    trap: "GRS protects against a regional disaster, but its primary-region copies sit in one datacenter. For zone failures you want ZRS or GZRS.",
   },
   {
     lesson: "storage",
@@ -313,11 +351,20 @@ export const level5 = tag("l5", [
   },
   {
     lesson: "cost-management",
-    prompt:
-      "Before deploying, you want to estimate the monthly cost of three VMs, a SQL database, and 2 TB of storage. Which tool should you use?",
-    options: ["Azure Pricing Calculator", "Microsoft Cost Management", "Azure Advisor", "Azure Monitor"],
+    kind: "match",
+    prompt: "Match each tool to when you would use it.",
+    categories: ["Before migrating or deploying", "After resources are running"],
+    options: [
+      "Azure Pricing Calculator",
+      "Azure Migrate business case",
+      "Microsoft Cost Management",
+      "Azure Advisor cost recommendations",
+    ],
     answer: 0,
-    explanation: "The Pricing Calculator estimates planned resources.",
+    answers: [0, 0, 1, 1],
+    explanation:
+      "The Pricing Calculator estimates planned resources and the Azure Migrate business case compares on-premises cost with Azure before you move. Cost Management analyzes actual spend and Advisor right-sizes what is already running.",
+    trap: "The old TCO calculator has been retired — the Azure Migrate business case now does the on-premises vs. Azure comparison.",
   },
   {
     lesson: "cost-management",
@@ -366,17 +413,20 @@ export const level5 = tag("l5", [
   },
   {
     lesson: "governance",
-    kind: "multi",
-    prompt: "Which TWO actions can Azure Policy perform? Each correct answer presents a complete solution.",
+    kind: "match",
+    prompt: "Match each requirement to the Azure feature that meets it.",
+    categories: ["Azure Policy", "Resource lock", "Azure RBAC", "Tags"],
     options: [
-      "Deny the creation of a non-compliant resource",
-      "Audit existing resources and report non-compliance",
-      "Assign the Owner role to a user",
-      "Prevent an Owner from signing in",
+      "Allow only approved VM sizes to be created",
+      "Stop anyone, even an Owner, from accidentally deleting a production database",
+      "Give a contractor read-only access to one resource group",
+      "Group resources by cost center for billing reports",
     ],
     answer: 0,
-    answers: [0, 1],
-    explanation: "Policy denies or audits configurations. Roles are RBAC; sign-in controls are Conditional Access.",
+    answers: [0, 1, 2, 3],
+    explanation:
+      "Policy enforces rules on resource properties. A CanNotDelete lock blocks deletion for everyone. RBAC controls who can do what at a scope. Tags are metadata used to organize and report costs.",
+    trap: "RBAC can't stop an Owner from deleting — a lock applies regardless of role.",
   },
   {
     lesson: "manage-and-deploy",
@@ -409,10 +459,17 @@ export const level5 = tag("l5", [
   },
   {
     lesson: "manage-and-deploy",
-    prompt: "Which component do the Azure portal, Azure CLI, Azure PowerShell, and REST clients all send requests through?",
-    options: ["Azure Resource Manager", "Azure Arc", "Azure Monitor", "Microsoft Entra Domain Services"],
+    kind: "order",
+    prompt: "Put the steps of an Azure deployment request in the order they happen.",
+    options: [
+      "You send a request from the portal, Azure CLI, Azure PowerShell, or a template",
+      "Azure Resource Manager receives the request",
+      "Resource Manager authenticates and authorizes it with Microsoft Entra ID and RBAC",
+      "Resource Manager passes the request to the resource provider, which creates the resource",
+    ],
     answer: 0,
-    explanation: "ARM is the unified management layer behind all tools.",
+    explanation:
+      "Every tool talks to Azure Resource Manager. ARM checks identity and permissions, then hands the work to the right resource provider. That shared layer is why results are consistent across tools.",
   },
   {
     lesson: "monitoring",
@@ -437,10 +494,17 @@ export const level5 = tag("l5", [
   },
   {
     lesson: "monitoring",
-    kind: "complete",
-    prompt: "To be notified by SMS when a VM's available memory drops below a threshold, configure an Azure Monitor ____.",
-    options: ["alert", "lock", "tag", "initiative"],
+    kind: "order",
+    prompt:
+      "You want an SMS when a VM's available memory drops below a threshold. Put the Azure Monitor alert flow in order.",
+    options: [
+      "Azure Monitor collects the VM's memory metric",
+      "An alert rule evaluates the metric against its condition",
+      "The condition is met and the alert fires",
+      "The action group sends the SMS",
+    ],
     answer: 0,
-    explanation: "Alerts with action groups send SMS, email, or trigger automation.",
+    explanation:
+      "Data comes in as metrics or logs, an alert rule evaluates it, a fired alert triggers its action group, and the action group notifies people (SMS, email, push) or runs automation.",
   },
 ]);

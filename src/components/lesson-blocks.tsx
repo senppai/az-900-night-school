@@ -1,3 +1,4 @@
+import { InteractiveDiagram } from "@/components/diagrams";
 import type { LessonBlock } from "@/content/types";
 import { cn } from "@/lib/utils";
 
@@ -66,14 +67,14 @@ function Block({ block }: { block: LessonBlock }) {
       );
     case "example":
       return (
-        <figure className="overflow-hidden rounded-2xl bg-[#071018] ring-1 ring-sky-400/20">
-          <figcaption className="border-b border-white/8 px-5 py-3 text-sm font-semibold text-sky-200">
+        <figure className="print-avoid-break overflow-hidden rounded-2xl bg-[#071018] ring-1 ring-sky-400/20 print:bg-transparent print:ring-neutral-300">
+          <figcaption className="border-b border-white/8 px-5 py-3 text-sm font-semibold text-sky-200 print:border-neutral-300 print:text-primary">
             Example · {block.title}
           </figcaption>
           <div className="space-y-3 px-5 py-4">
             <p className="text-base leading-7 text-foreground/90">{block.body}</p>
             {block.code ? (
-              <pre className="overflow-x-auto rounded-xl bg-black/40 p-4 font-mono text-[13px] leading-6 text-sky-100">
+              <pre className="overflow-x-auto rounded-xl bg-black/40 p-4 font-mono text-[13px] leading-6 text-sky-100 print:bg-transparent print:text-foreground print:ring-1 print:ring-neutral-300">
                 {block.code}
               </pre>
             ) : null}
@@ -85,17 +86,19 @@ function Block({ block }: { block: LessonBlock }) {
       );
     case "diagram":
       return (
-        <figure className="overflow-hidden rounded-2xl bg-[#071018] ring-1 ring-primary/20">
+        <figure className="print-avoid-break overflow-hidden rounded-2xl bg-[#071018] ring-1 ring-primary/20 print:bg-transparent print:ring-neutral-300">
           {block.title ? (
-            <figcaption className="border-b border-white/8 px-5 py-3 text-sm font-semibold text-primary">
+            <figcaption className="border-b border-white/8 px-5 py-3 text-sm font-semibold text-primary print:border-neutral-300">
               {block.title}
             </figcaption>
           ) : null}
-          <pre className="overflow-x-auto p-5 font-mono text-[12px] leading-5 text-sky-100/90 sm:text-[13px] sm:leading-6">
+          <pre className="overflow-x-auto p-5 font-mono text-[12px] leading-5 text-sky-100/90 sm:text-[13px] sm:leading-6 print:text-foreground">
             {block.ascii}
           </pre>
         </figure>
       );
+    case "interactive":
+      return <InteractiveDiagram id={block.diagram} />;
     case "table":
       return (
         <div className="overflow-x-auto rounded-2xl ring-1 ring-white/10">

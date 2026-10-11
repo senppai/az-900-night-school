@@ -13,8 +13,20 @@ const nav = [
   { href: "/flashcards", label: "Flashcards" },
   { href: "/practice", label: "Practice exam" },
   { href: "/exam-prep", label: "Exam prep" },
+  { href: "/mistakes", label: "Mistakes" },
   { href: "/cheatsheets", label: "Cheat sheets" },
 ];
+
+function NavBadge({ href }: { href: string }) {
+  const { state, ready } = useProgress();
+  const count = Object.keys(state.mistakes).length;
+  if (href !== "/mistakes" || !ready || count === 0) return null;
+  return (
+    <span className="ml-1.5 rounded-full bg-trap/20 px-1.5 py-0.5 text-[10px] font-semibold text-trap">
+      {count}
+    </span>
+  );
+}
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -39,7 +51,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </span>
             </span>
           </Link>
-          <nav className="ml-6 hidden items-center gap-1 md:flex">
+          <nav className="ml-6 hidden items-center gap-1 lg:flex">
             {nav.map((item) => {
               const active =
                 item.href === "/"
@@ -57,12 +69,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   )}
                 >
                   {item.label}
+                  <NavBadge href={item.href} />
                 </Link>
               );
             })}
           </nav>
           <div className="ml-auto flex items-center gap-3">
-            <div className="hidden items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 ring-1 ring-white/8 sm:flex">
+            <div className="hidden items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 ring-1 ring-white/8 sm:flex lg:hidden xl:flex">
               <Sparkles className="size-3.5 text-accent" />
               <span className="text-xs font-medium">
                 {ready ? `${state.xp} XP · ${rank.emoji} ${rank.title}` : "…"}
@@ -175,6 +188,7 @@ function MobileNav({ pathname }: { pathname: string }) {
                   )}
                 >
                   {item.label}
+                  <NavBadge href={item.href} />
                 </Link>
               ))}
             </div>

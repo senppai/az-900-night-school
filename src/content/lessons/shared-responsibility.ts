@@ -107,6 +107,7 @@ MICROSOFT always            Physical hosts
         ["Identities and access", "You", "You", "You"],
       ],
     },
+    { type: "interactive", diagram: "shared-responsibility" },
     {
       type: "example",
       title: "Contoso's three different \"servers\"",

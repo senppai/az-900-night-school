@@ -7,10 +7,12 @@ import type { QuizQuestion } from "@/content/types";
 type QuizProps = {
   questions: QuizQuestion[];
   onFinished: (correct: number, total: number) => void;
+  /** Called once per submitted answer. */
+  onAnswer?: (question: QuizQuestion, correct: boolean) => void;
   title?: string;
 };
 
-export function Quiz({ questions, onFinished, title = "Check yourself" }: QuizProps) {
+export function Quiz({ questions, onFinished, onAnswer, title = "Check yourself" }: QuizProps) {
   const [index, setIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [done, setDone] = useState(false);
@@ -89,6 +91,7 @@ export function Quiz({ questions, onFinished, title = "Check yourself" }: QuizPr
         feedback
         onSubmit={(isRight) => {
           if (isRight) setCorrect((value) => value + 1);
+          onAnswer?.(question, isRight);
         }}
         after={
           <button

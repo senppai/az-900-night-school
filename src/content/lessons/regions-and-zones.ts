@@ -172,6 +172,7 @@ export const lesson: Lesson = {
         },
       ],
     },
+    { type: "interactive", diagram: "regions-zones" },
     {
       type: "cheatsheet",
       rows: [

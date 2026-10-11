@@ -9,12 +9,14 @@ import {
   type ReactNode,
 } from "react";
 import {
+  applyAnswers,
   EMPTY_PROGRESS,
   getProgressSnapshot,
   getServerProgressSnapshot,
   rankForXp,
   subscribeProgress,
   writeProgress,
+  type AnswerEvent,
   type ProgressState,
   type SavedExamRun,
   type Tally,
@@ -29,11 +31,17 @@ type ProgressContextValue = {
   savePracticeScore: (score: number, total: number) => void;
   saveExamResult: (levelId: string, perLesson: Record<string, Tally>) => void;
   saveExamRun: (levelId: string, run: SavedExamRun | null) => void;
+  /** Feeds the mistake notebook, readiness estimate and daily goal. Call from event handlers. */
+  recordAnswers: (events: AnswerEvent[]) => void;
+  setExamDate: (date: string | null) => void;
+  setDailyGoal: (goal: number) => void;
   reset: () => void;
   rank: ReturnType<typeof rankForXp>;
 };
 
 const ProgressContext = createContext<ProgressContextValue | null>(null);
+
+const noopSubscribe = () => () => undefined;
 
 function without<T>(record: Record<string, T>, key: string): Record<string, T> {
   const copy = { ...record };
@@ -46,6 +54,11 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     subscribeProgress,
     getProgressSnapshot,
     getServerProgressSnapshot,
+  );
+  const ready = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
   );
 
   const markLessonComplete = useCallback((slug: string) => {
@@ -139,11 +152,24 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     writeProgress({ ...prev, examSaved: run ? { ...rest, [levelId]: run } : rest });
   }, []);
 
+  const recordAnswers = useCallback((events: AnswerEvent[]) => {
+    writeProgress(applyAnswers(getProgressSnapshot(), events, new Date()));
+  }, []);
+
+  const setExamDate = useCallback((date: string | null) => {
+    writeProgress({ ...getProgressSnapshot(), examDate: date });
+  }, []);
+
+  const setDailyGoal = useCallback((goal: number) => {
+    const clamped = Math.min(200, Math.max(1, Math.round(goal) || 1));
+    writeProgress({ ...getProgressSnapshot(), dailyGoal: clamped });
+  }, []);
+
   const reset = useCallback(() => writeProgress(EMPTY_PROGRESS), []);
 
   const value = useMemo(
     () => ({
-      ready: true,
+      ready,
       state,
       markLessonComplete,
       saveQuizScore,
@@ -151,10 +177,14 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       savePracticeScore,
       saveExamResult,
       saveExamRun,
+      recordAnswers,
+      setExamDate,
+      setDailyGoal,
       reset,
       rank: rankForXp(state.xp),
     }),
     [
+      ready,
       state,
       markLessonComplete,
       saveQuizScore,
@@ -162,6 +192,9 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       savePracticeScore,
       saveExamResult,
       saveExamRun,
+      recordAnswers,
+      setExamDate,
+      setDailyGoal,
       reset,
     ],
   );

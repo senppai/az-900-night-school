@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArrowRight, Search } from "lucide-react";
 import { useProgress } from "@/components/progress-provider";
+import { StudyDashboard } from "@/components/study-dashboard";
 import { DOMAINS, SITE } from "@/content/catalog";
 import { lessons, lessonsForDomain } from "@/content/lessons";
 import { cn } from "@/lib/utils";
@@ -76,6 +77,8 @@ export function HomeView() {
           />
         </div>
       </section>
+
+      <StudyDashboard />
 
       <section className="grid gap-4 md:grid-cols-3">
         {DOMAINS.map((domain) => {

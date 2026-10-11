@@ -10,7 +10,7 @@ import { getAdjacent } from "@/content/lessons";
 import type { Lesson } from "@/content/types";
 
 export function LessonView({ lesson }: { lesson: Lesson }) {
-  const { markLessonComplete, saveQuizScore, state } = useProgress();
+  const { markLessonComplete, saveQuizScore, recordAnswers, state } = useProgress();
   const { prev, next } = getAdjacent(lesson.slug);
   const domain = DOMAINS.find((item) => item.id === lesson.domain);
   const completed = state.lessons[lesson.slug]?.completed;
@@ -105,6 +105,11 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
         questions={lesson.quiz}
         title="Mini quiz"
         onFinished={(correct, total) => saveQuizScore(lesson.slug, correct, total)}
+        onAnswer={(question, correct) =>
+          recordAnswers([
+            { questionId: question.id, correct, source: "quiz", lesson: lesson.slug, domain: lesson.domain },
+          ])
+        }
       />
 
       <nav className="flex flex-col gap-3 sm:flex-row">
